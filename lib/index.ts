@@ -1,3 +1,4 @@
+export * from "./schemas";
 export * from "./Source";
 export * from "./JSONSeeker";
 export * from "./UrlDiscoverer";
