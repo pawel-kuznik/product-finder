@@ -16,3 +16,30 @@ unpolite to DDoS then while getting the data.
 The `Source` class also provides the found product information, discovered links,
 and organization data. From this point the greater system (one that uses this library),
 can make further actions.
+
+A typical use would look something like:
+
+```
+// create an instance of the source with an entry point which should
+// be the top-level domain of the webstored
+const source = new Source("https://sample-webstore.com");
+
+source.setBlacklist([
+    /\/account\//,
+    /\/reviews\//,
+    /\/comments\//
+]);
+
+const processCallback = (message: text, source: Source) => {
+    console.log(message);
+};
+
+// call the process and prepare for a long wait
+await source.process(processCallback);
+
+// discovered products are available via the source property.
+const products = source.products;
+
+// all data can be created via JSON serialization. 
+const allData = source.toJSON();
+```
