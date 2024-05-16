@@ -1,7 +1,14 @@
 import { SchemaProduct } from "./schemas";
 
+/**
+ *  This is a class that will look for products in a JSON string. The class
+ *  looks for objects annotated like schema.org Product objects.
+ */
 export class JSONSeeker {
 
+    /**
+     *  @throws Error   When JSON is not parsed correctly it can throw.
+     */
     find(input: string) : SchemaProduct[] {
 
         const products: SchemaProduct[] = [];

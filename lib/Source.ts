@@ -4,16 +4,24 @@ import { WebsiteSeeker } from "./WebsiteSeeker";
 import { SchemaOrganization, SchemaProduct } from "./schemas";
 import { delay } from "./delay";
 
+/**
+ *  When source processes a link a callback is called.
+ */
 export type SourceProgressCallback = (message: string, source: Source) => void;
 
+/**
+ *  A data source that represents a website of a shop. This class allows for processing
+ *  the source and getting possible links to process later on or access to discovered
+ *  products.
+ * 
+ *  After the processing is done the source can be serialized to JSON for later use
+ *  or continued processing.
+ */
 export class Source {
 
     private _entryUrl: string = '';
-
     private _urlDiscoverer: UrlDiscoverer;
-
     private _processed: Set<string> = new Set();
-
     private _products: Set<SchemaProduct> = new Set();
     private _organization: SchemaOrganization|undefined;
 
@@ -26,6 +34,9 @@ export class Source {
         this._urlDiscoverer = new UrlDiscoverer(target)
     }
 
+    /**
+     *  Serialize the Source into a JSON data.
+     */
     toJSON() {
         return {
             organization: this._organization,
@@ -34,6 +45,10 @@ export class Source {
         }
     }
 
+    /**
+     *  Set a blacklist of links to exclude from processing. This is useful for excluding links that lead
+     *  to parts of website that are known to not produce any products data (like account, comments, or so on). 
+     */
     setBlacklist(regexes: RegExp[]) {
         
         this._urlDiscoverer.setBlacklist(regexes);
@@ -84,4 +99,4 @@ export class Source {
 
 function eta(count: number) {
     return String(count * 500 / 1000 / 60);
-}
+};
