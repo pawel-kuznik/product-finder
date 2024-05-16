@@ -1,4 +1,3 @@
-const url = require("url");
 import { UrlDiscoverer } from "./UrlDiscoverer";
 import { WebsiteSeeker } from "./WebsiteSeeker";
 import { SchemaOrganization, SchemaProduct } from "./schemas";
