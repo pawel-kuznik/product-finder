@@ -1,9 +1,11 @@
 export interface SchemaOffer {
+    "@context": "http://schema.org";
     "@type": "Offer";
     price: string;
     priceCurrency: string;
     url: string;
     priceValidUntil: string;
+    availability?: SchemaItemAvailability;
 };
 
 export interface SchemaProduct {
@@ -29,5 +31,19 @@ export interface SchemaOrganization {
     url: string;
     name: string;
     logo: string;
-
 };
+
+export enum SchemaItemAvailability {
+    BackOrder = "http://schema.org/BackOrder",
+    Discontinued = "http://schema.org/Discontinued",
+    InStock = "http://schema.org/InStock",
+    InStoreOnly = "http://schema.org/InStoreOnly",
+    LimitedAvailability = "http://schema.org/LimitedAvailability",
+    MadeToOrder = "http://schema.org/MadeToOrder",
+    OnlineOnly = "http://schema.org/OnlineOnly",
+    OutOfStock = "http://schema.org/OutOfStock",
+    PreOrder = "http://schema.org/PreOrder",
+    PreSale = "http://schema.org/PreSale",
+    Reserved = "http://schema.org/Reserved",
+    SoldOut = "http://schema.org/SoldOut",
+}

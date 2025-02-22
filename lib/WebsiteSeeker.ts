@@ -1,6 +1,7 @@
 import parse from "node-html-parser";
 import { JSONSeeker } from "./JSONSeeker";
 import { SchemaProduct } from "./schemas";
+import { ElementSchemaSeeker } from "./ElementSchemaSeeker";
 
 /**
  *  This is a class that will look for products in html content. The class
@@ -17,13 +18,16 @@ export class WebsiteSeeker {
 
         const dom = parse(suspectedHtml);
 
-        const scripts = dom.querySelectorAll('script[type="application/ld+json"]');
         const products: SchemaProduct[] = [];
 
-        scripts.map(s => {
-
-            const jsonSeeker = new JSONSeeker();
+        const jsonSeeker = new JSONSeeker();
+        dom.querySelectorAll('script[type="application/ld+json"]').map(s => {
             products.push(...jsonSeeker.find(s.innerText.toString()));
+        });
+
+        const elementSeeker = new ElementSchemaSeeker();
+        dom.querySelectorAll('*[itemtype*="://schema.org/Product"]').map(e => {
+            products.push(...elementSeeker.find(e));
         });
 
         return products;
