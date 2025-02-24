@@ -13,7 +13,7 @@ describe("WebsiteSeeker", () => {
         const products = seeker.find(testData);
 
         expect(products.length).toEqual(1);
-        expect(products[0]).toHaveProperty("name", "Product");
+        expect(products[0].productSchema).toHaveProperty("name", "Product");
     });
 
     it('should find a product from array in a script tag', () => {
@@ -25,6 +25,6 @@ describe("WebsiteSeeker", () => {
         const products = seeker.find(testData);
 
         expect(products.length).toEqual(1);
-        expect(products[0]).toHaveProperty("name", "Product");
+        expect(products[0].productSchema).toHaveProperty("name", "Product");
     });
 });

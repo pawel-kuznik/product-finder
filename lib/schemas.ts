@@ -13,7 +13,7 @@ export interface SchemaProduct {
     "@type": "Product";
     name: string;
     url: string;
-    brand?: string;
+    brand?: SchemaBrand;
     image?: string;
     offers: SchemaOffer,
     gtin?: string;
@@ -22,6 +22,12 @@ export interface SchemaProduct {
     gtin14?: string;
     gtin8?: string;
     sku?: string;
+};
+
+export interface SchemaBrand {
+    "@context": "http://schema.org";
+    "@type": "Brand";
+    name: string;
 };
 
 export interface SchemaOrganization {
@@ -46,4 +52,4 @@ export enum SchemaItemAvailability {
     PreSale = "http://schema.org/PreSale",
     Reserved = "http://schema.org/Reserved",
     SoldOut = "http://schema.org/SoldOut",
-}
+};

@@ -1,6 +1,7 @@
 import { extractProperty } from "./domUtils/extractProperty";
 import { findRelatedChild } from "./domUtils/findRelatedChild";
-import { SchemaItemAvailability, SchemaOffer, SchemaProduct } from "./schemas";
+import { ProductResult } from "./ProductResult";
+import { SchemaBrand, SchemaItemAvailability, SchemaOffer, SchemaProduct } from "./schemas";
 import { HTMLElement } from "node-html-parser";
 
 /**
@@ -13,7 +14,7 @@ export class ElementSchemaSeeker {
      *  Find product information inside a specific element. The element
      *  is supposed to have itemtype set to Product.
      */
-    find(input: HTMLElement) : SchemaProduct[] {
+    find(input: HTMLElement) : ProductResult[] {
 
         const itemtype = input.getAttribute("itemtype");
         if (itemtype !== "http://schema.org/Product" && itemtype !== "https://schema.org/Product") throw Error("Missing Product type");
@@ -43,8 +44,11 @@ export class ElementSchemaSeeker {
         if (image) productSchema.image = extractProperty(image);
 
         // @todo brand is a more complex structure. It needs special parsing.
-        const brand = findRelatedChild(input, '*[itemtype]', '*[itemprop="brand"]');
-        if (brand) productSchema.brand = extractProperty(brand);
+        const brand = findRelatedChild(input, '*[itemtype*=Product]', '*[itemprop="brand"]');
+        if (brand) {
+            const processedBrand = this.findBrand(brand);
+            if (processedBrand) productSchema.brand = processedBrand;
+        }
 
         const sku = findRelatedChild(input, '*[itemtype]', '*[itemprop="sku"]');
         if (sku) productSchema.sku = extractProperty(sku);
@@ -70,7 +74,10 @@ export class ElementSchemaSeeker {
             if (processedOffers) productSchema.offers = processedOffers;
         }
 
-        return [ productSchema ];
+        return [ {
+            timestamp: new Date().getTime(),
+            productSchema
+        } ];
     }
 
     private findOffer(input: HTMLElement): SchemaOffer {
@@ -100,5 +107,22 @@ export class ElementSchemaSeeker {
         if (availability) offerSchema.availability = extractProperty(availability) as SchemaItemAvailability;
 
         return offerSchema;
+    }
+
+    private findBrand(input: HTMLElement) : SchemaBrand|undefined {
+
+        const itemtype = input.getAttribute("itemtype");
+        if (itemtype !== "http://schema.org/Brand" && itemtype !== "https://schema.org/Brand") return undefined;
+
+        const brandSchema: SchemaBrand = {
+            "@context": "http://schema.org",
+            "@type": "Brand",
+            "name": ""
+        };
+
+        const name = findRelatedChild(input, '*[itemtype]', '*[itemprop="name"]');
+        if (name) brandSchema.name = extractProperty(name);
+
+        return brandSchema;
     }
 };

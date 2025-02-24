@@ -17,10 +17,10 @@ describe("ElementSchemaSeeker", () => {
 
         expect(products).toHaveLength(1);
 
-        const product = products[0];
+        const product = products[0].productSchema;
 
         expect(product.name).toEqual("Product");
-        expect(product.brand).toEqual("Brand");
+        expect(product.brand?.name).toEqual("Brand");
         expect(product).toHaveProperty("offers");
         expect(product.offers.price).toEqual("3.00");
         expect(product.offers.priceCurrency).toEqual("EUR");
@@ -39,7 +39,7 @@ describe("ElementSchemaSeeker", () => {
 
         expect(products).toHaveLength(1);
 
-        const product = products[0];
+        const product = products[0].productSchema;
 
         expect(product.gtin).toEqual("gtinnumber");
         expect(product.gtin8).toEqual("12345678");

@@ -1,3 +1,4 @@
+import { ProductResult } from "./ProductResult";
 import { SchemaProduct } from "./schemas";
 
 /**
@@ -9,9 +10,9 @@ export class JSONSeeker {
     /**
      *  @throws Error   When JSON is not parsed correctly it can throw.
      */
-    find(input: string) : SchemaProduct[] {
+    find(input: string) : ProductResult[] {
 
-        const products: SchemaProduct[] = [];
+        const products: ProductResult[] = [];
 
         const data = JSON.parse(input);
 
@@ -23,9 +24,12 @@ export class JSONSeeker {
         return products;
     }
 
-    private delve(suspect: object) : SchemaProduct[] {
+    private delve(suspect: object) : ProductResult[] {
 
-        if ("@type" in suspect && suspect["@type"] === "Product") return [ suspect as SchemaProduct ];
+        if ("@type" in suspect && suspect["@type"] === "Product") return [ {
+            timestamp: new Date().getTime(),
+            productSchema: (suspect as SchemaProduct)
+        } ];
 
         return [];
     }

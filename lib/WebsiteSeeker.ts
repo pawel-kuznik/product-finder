@@ -1,7 +1,7 @@
 import parse from "node-html-parser";
 import { JSONSeeker } from "./JSONSeeker";
-import { SchemaProduct } from "./schemas";
 import { ElementSchemaSeeker } from "./ElementSchemaSeeker";
+import { ProductResult } from "./ProductResult";
 
 /**
  *  This is a class that will look for products in html content. The class
@@ -14,11 +14,11 @@ export class WebsiteSeeker {
     /**
      *  Find products inside passed HTML string.
      */
-    find(suspectedHtml: string) : SchemaProduct[] {
+    find(suspectedHtml: string) : ProductResult[] {
 
         const dom = parse(suspectedHtml);
 
-        const products: SchemaProduct[] = [];
+        const products: ProductResult[] = [];
 
         const jsonSeeker = new JSONSeeker();
         dom.querySelectorAll('script[type="application/ld+json"]').map(s => {

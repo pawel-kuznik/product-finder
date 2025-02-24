@@ -1,7 +1,8 @@
 import { UrlDiscoverer } from "./UrlDiscoverer";
 import { WebsiteSeeker } from "./WebsiteSeeker";
-import { SchemaOrganization, SchemaProduct } from "./schemas";
+import { SchemaOrganization } from "./schemas";
 import { delay } from "./delay";
+import { ProductResult } from "./ProductResult";
 
 /**
  *  When source processes a link a callback is called.
@@ -21,7 +22,7 @@ export class Source {
     private _entryUrl: string = '';
     private _urlDiscoverer: UrlDiscoverer;
     private _processed: Set<string> = new Set();
-    private _products: Set<SchemaProduct> = new Set();
+    private _products: Set<ProductResult> = new Set();
     private _organization: SchemaOrganization|undefined;
 
     get links() { return this._urlDiscoverer.found; }
