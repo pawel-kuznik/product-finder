@@ -1,5 +1,6 @@
 import { extractProperty } from "./domUtils/extractProperty";
 import { findRelatedChild } from "./domUtils/findRelatedChild";
+import { testForSchemaType } from "./domUtils/testForSchemaType";
 import { ProductResult } from "./ProductResult";
 import { SchemaBrand, SchemaItemAvailability, SchemaOffer, SchemaProduct } from "./schemas";
 import { HTMLElement } from "node-html-parser";
@@ -16,8 +17,7 @@ export class ElementSchemaSeeker {
      */
     find(input: HTMLElement) : ProductResult[] {
 
-        const itemtype = input.getAttribute("itemtype");
-        if (itemtype !== "http://schema.org/Product" && itemtype !== "https://schema.org/Product") throw Error("Missing Product type");
+        if (!testForSchemaType(input, "Product")) throw Error("Missing Product type");
 
         const productSchema: SchemaProduct = {
             "@context": "http://schema.org",
@@ -82,8 +82,7 @@ export class ElementSchemaSeeker {
 
     private findOffer(input: HTMLElement): SchemaOffer {
 
-        const itemtype = input.getAttribute("itemtype");
-        if (itemtype !== "http://schema.org/Offer" && itemtype !== "https://schema.org/Offer") throw Error("Missing Offer type");
+        if (!testForSchemaType(input, "Offer")) throw Error("Missing Offer type");
 
         const offerSchema: SchemaOffer = {
             "@context": "http://schema.org",
@@ -111,8 +110,7 @@ export class ElementSchemaSeeker {
 
     private findBrand(input: HTMLElement) : SchemaBrand|undefined {
 
-        const itemtype = input.getAttribute("itemtype");
-        if (itemtype !== "http://schema.org/Brand" && itemtype !== "https://schema.org/Brand") return undefined;
+        if (!testForSchemaType(input, "Brand")) return undefined;
 
         const brandSchema: SchemaBrand = {
             "@context": "http://schema.org",

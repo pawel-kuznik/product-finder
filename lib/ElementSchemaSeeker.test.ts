@@ -20,11 +20,27 @@ describe("ElementSchemaSeeker", () => {
         const product = products[0].productSchema;
 
         expect(product.name).toEqual("Product");
-        expect(product.brand?.name).toEqual("Brand");
+        
         expect(product).toHaveProperty("offers");
         expect(product.offers.price).toEqual("3.00");
         expect(product.offers.priceCurrency).toEqual("EUR");
     });
+
+    it("should find a brand", () => {
+        const testDataString = fs.readFileSync(path.resolve(__dirname, '../test_data/test_3.html')).toString("utf-8");
+        const dom = parse(testDataString);
+
+        const suspectElement = dom.querySelector("div[itemscope]");
+        if (!suspectElement) throw Error("Test data don't have required element");
+
+        const seeker = new ElementSchemaSeeker();
+        const products = seeker.find(suspectElement);
+
+        expect(products).toHaveLength(1);
+
+        const product = products[0].productSchema;
+        expect(product.brand?.name).toEqual("Brand");
+    })
 
     it("should find a GTIN8, GTIN12, GTIN13, GTIN14", () => {
 

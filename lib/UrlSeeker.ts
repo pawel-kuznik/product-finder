@@ -1,5 +1,5 @@
+import { ProductResult } from "./ProductResult";
 import { WebsiteSeeker } from "./WebsiteSeeker";
-import { SchemaProduct } from "./schemas";
 
 /**
  *  The URLSeeker takes an URL, fetches the content, and then looks for products
@@ -7,7 +7,7 @@ import { SchemaProduct } from "./schemas";
  */
 export class UrlSeeker {
 
-    async find(url: string) : Promise<SchemaProduct[]> {
+    async find(url: string) : Promise<ProductResult[]> {
 
         const response = await fetch(url, { redirect: "follow" });
         const html = await response.text(); 

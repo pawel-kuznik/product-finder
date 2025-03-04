@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "cache:clear": "jest --clearCache",
     "build": "tsc"
   },
   "author": "",
