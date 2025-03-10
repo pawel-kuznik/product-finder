@@ -1,14 +1,19 @@
 {
-  "name": "product-finder",
+  "name": "@pawel-kuznik/product-finder",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "jest",
     "cache:clear": "jest --clearCache",
-    "build": "tsc"
+    "build": "tsc",
+    "prepare": "npm run build"
   },
   "author": "",
+  "files": [
+    "dist/*"
+  ],
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^29.5.12",
