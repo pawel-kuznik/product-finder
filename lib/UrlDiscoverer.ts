@@ -1,5 +1,6 @@
 const url = require("url");
 import parse from "node-html-parser";
+import robotsParser, { Robot } from "robots-parser";
 
 /**
  *  The UrlDiscoverer can scan html content and look for links that later
@@ -19,6 +20,7 @@ export class UrlDiscoverer {
 
     private _allowedDomain: string;
     private _blacklist: RegExp[] = [];
+    private _robots: Robot|null = null;
 
     private _found: Set<string> = new Set();
 
@@ -26,7 +28,7 @@ export class UrlDiscoverer {
 
     /**
      *  Construct the discoverer.
-     *  @throw Error    When the entry is somehow invalud it will not allow for
+     *  @throw Error    When the entry is somehow invalid it will not allow for
      *                  the instance to be constructed. 
      */
     constructor(entry: string) {
@@ -63,13 +65,21 @@ export class UrlDiscoverer {
         // the whole internet, but a very specific shop. We also want to have only
         // http: and https: links discovered. This will make sure that we don't include
         // ftp: or mailto: links.
-        const links = dom.querySelectorAll(`a[href^="http://${this._allowedDomain}"], a[href^="https://${this._allowedDomain}"]`);
+        const links = dom.querySelectorAll(`a[href^="http://${this._allowedDomain}"], a[href^="https://${this._allowedDomain}"], a[href^="/"]`);
 
         for (let a of links) {
 
-            const link = a.getAttribute("href");
-            if (!link) continue;
+            const rawLink = a.getAttribute("href");
+            if (!rawLink) continue;
 
+            // an easy way to deal with relative links is to see if it starts with "/"
+            // and if so, we can just prepend the allowed domain to it as we assume
+            // that the allowed domains is the defacto base domain.
+            const link = rawLink.startsWith("/") ? `http://${this._allowedDomain}${rawLink}` : rawLink;
+
+            // check if when we have robots.txt file we should skip this link
+            if (this._robots && this._robots.isDisallowed(link, "*")) continue;
+            
             let blacklistHit = false;
             this._blacklist.forEach(r => blacklistHit = blacklistHit || r.test(link));
 
@@ -86,4 +96,13 @@ export class UrlDiscoverer {
 
         this._blacklist = regexes;
     }
+
+    /**
+     *  Set a robot.txt file that should be used to determine if links should be
+     *  discovered or not.
+     */
+    setRobotTxt(baseUrl: string, robotsTxt: string) {
+
+        this._robots = robotsParser(baseUrl, robotsTxt);
+    }   
 };

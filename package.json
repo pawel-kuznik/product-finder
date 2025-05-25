@@ -8,7 +8,9 @@
     "test": "jest",
     "cache:clear": "jest --clearCache",
     "build": "tsc",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "find": "ts-node lib/tools/findUnderURL.ts",
+    "discover": "ts-node lib/tools/discoverLinksUnderURL.ts"
   },
   "author": "",
   "files": [
@@ -19,9 +21,11 @@
     "@types/jest": "^29.5.12",
     "jest": "^29.7.0",
     "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "node-html-parser": "^6.1.13"
+    "node-html-parser": "^6.1.13",
+    "robots-parser": "^3.0.1"
   }
 }
